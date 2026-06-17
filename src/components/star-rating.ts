@@ -19,7 +19,7 @@ class StarRating extends HTMLElement {
         this.setAttribute('aria-valuemax', String(this._max));
         this.setAttribute('aria-valuenow', String(this._value));
         this.render();
-        this.addEventListener();
+        this.addEventListeners();
     }
 
     attributeChangedCallback(name: string, _old: string, value: string) {
