@@ -17,7 +17,7 @@ class ColorPicker extends HTMLElement {
     }
 
     private addEventListeners() {
-        this.shadow.querySelectorAll('input[type="range"]').forEach(input => {
+        this.shadow.querySelectorAll('input[type="range"]').forEach((e: Event) => {
             const target = e.target as HTMLInputElement;
             const prop = target.dataset.prop as 'h' | 's' | 'l';
             this[prop] = Number(target.value);
