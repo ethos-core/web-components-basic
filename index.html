@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Components Basic</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f8f9fa;
+      color: #1a1a1a;
+    }
+
+    h1 { text-align: center; margin-bottom: 32px; }
+
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .demo-section h2 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: normal;
+    }
+    .badge.supported { background: #d1fae5; color: #065f46; }
+    .badge.unsupported { background: #fee2e2; color: #991b1b; }
+
+    .output {
+      background: #f1f3f5;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 40px;
+      white-space: pre-wrap;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      background: white;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+    button:hover { background: #f0f0f0; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    input[type="number"], input[type="text"] {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* Intersection Observer */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animate-on-scroll.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .scroll-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 32px;
+      border-radius: 8px;
+      margin: 16px 0;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* Resize Observer */
+    .resize-box {
+      border: 2px dashed #adb5bd;
+      border-radius: 8px;
+      padding: 24px;
+      resize: horizontal;
+      overflow: auto;
+      min-width: 200px;
+      max-width: 100%;
+      transition: background 0.3s;
+    }
+    .resize-box[data-size="small"] { background: #fff3bf; }
+    .resize-box[data-size="medium"] { background: #d3f9d8; }
+    .resize-box[data-size="large"] { background: #d0ebff; }
+
+    /* Drag and Drop */
+    .drop-zone {
+      border: 2px dashed #adb5bd;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      color: #868e96;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .drop-zone.drag-over {
+      border-color: #228be6;
+      background: #e7f5ff;
+      color: #228be6;
+    }
+
+    .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .file-list { list-style: none; padding: 0; margin: 8px 0 0; }
+    .file-list li { padding: 4px 0; font-size: 14px; }
+
+    /* URL Params */
+    .param-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+    .current-url {
+      word-break: break-all;
+      background: #f1f3f5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web Components Demo</h1>
+
+  <section>
+    <h2>Star Rating</h2>
+    <star-rating value="3" max="5"></star-rating>
+    <p style="margin-top:8px; font-size:14px; color:#888;">Click or use arrow keys</p>
+  </section>
+
+  <section>
+    <h2>Color Picker</h2>
+    <color-picker></color-picker>
+  </section>
+
+  <section>
+    <h2>Lazy Image</h2>
+    <lazy-image
+      src="https://picsum.photos/600/300"
+      alt="Sample image"
+      width="600"
+      height="300"
+    ></lazy-image>
+  </section>
+
+  <section>
+    <h2>Data Table</h2>
+    <data-table
+      columns='[{"key":"name","label":"Name"},{"key":"age","label":"Age"},{"key":"city","label":"City"}]'
+      page-size="3"
+    ></data-table>
+  </section>
+
+  <section>
+    <h2>Toast Notification</h2>
+    <button id="toast-success">Success</button>
+    <button id="toast-error">Error</button>
+    <button id="toast-warning">Warning</button>
+    <button id="toast-info">Info</button>
+  </section>
+
+  <h1>🧪 Web APIs Playground</h1>
+
+  <!-- API 1: Intersection Observer -->
+  <section class="demo-section" id="demo-intersection">
+    <h2>1. Intersection Observer <span class="badge" id="badge-intersection"></span></h2>
+    <p>Scroll down to see cards animate into view.</p>
+    <div class="animate-on-scroll scroll-card">Card 1: Revealed on scroll</div>
+    <div class="animate-on-scroll scroll-card">Card 2: Revealed on scroll</div>
+    <div class="animate-on-scroll scroll-card">Card 3: Revealed on scroll</div>
+    <div class="output" id="output-intersection"></div>
+  </section>
+
+  <!-- API 2: ResizeObserver -->
+  <section class="demo-section" id="demo-resize">
+    <h2>2. ResizeObserver <span class="badge" id="badge-resize"></span></h2>
+    <p>Drag the right edge of the box to resize it. The color changes based on the size.</p>
+    <div class="resize-box" id="resize-box">
+      Resizable box — drag to change width
+    </div>
+    <div class="output" id="output-resize"></div>
+  </section>
+
+  <!-- API 3: Web Workers -->
+  <section class="demo-section" id="demo-workers">
+    <h2>3. Web Workers <span class="badge" id="badge-workers"></span></h2>
+    <p>Offload prime number calculation to a Web Worker without blocking the main thread.</p>
+    <div class="controls">
+      <label>Limit: <input type="number" id="prime-limit" value="100000" min="100" /></label>
+      <button id="btn-calc-primes">Calculate in Worker</button>
+      <button id="btn-calc-main">Calculate on Main Thread (comparison)</button>
+    </div>
+    <div class="output" id="output-workers"></div>
+  </section>
+
+  <!-- API 4: Clipboard API -->
+  <section class="demo-section" id="demo-clipboard">
+    <h2>4. Clipboard API <span class="badge" id="badge-clipboard"></span></h2>
+    <p>Enter text and use the buttons to copy to or paste from the clipboard.</p>
+    <div class="controls">
+      <input type="text" id="clipboard-text" value="Text to copy" style="flex:1" />
+      <button id="btn-copy">Copy</button>
+      <button id="btn-paste">Paste</button>
+    </div>
+    <div class="output" id="output-clipboard"></div>
+  </section>
+
+  <!-- API 5: Geolocation API -->
+  <section class="demo-section" id="demo-geolocation">
+    <h2>5. Geolocation API <span class="badge" id="badge-geolocation"></span></h2>
+    <p>Get your current location and generate a map link.</p>
+    <div class="controls">
+      <button id="btn-location">Get Current Location</button>
+    </div>
+    <div class="output" id="output-geolocation"></div>
+  </section>
+
+  <!-- API 6: Web Speech API -->
+  <section class="demo-section" id="demo-speech">
+    <h2>6. Web Speech API <span class="badge" id="badge-speech"></span></h2>
+    <p>Start speech recognition to convert spoken words to text. Say "dark mode" to toggle the theme.</p>
+    <div class="controls">
+      <button id="btn-speech-start">🎤 Start Recognition</button>
+      <button id="btn-speech-stop" disabled>⏹ Stop</button>
+    </div>
+    <div class="output" id="output-speech"></div>
+  </section>
+
+  <!-- API 7: Drag and Drop -->
+  <section class="demo-section" id="demo-dnd">
+    <h2>7. Drag and Drop API <span class="badge" id="badge-dnd"></span></h2>
+    <p>Drag and drop files into the drop zone below.</p>
+    <div class="drop-zone" id="drop-zone">
+      📁 Drop files here
+    </div>
+    <ul class="file-list" id="file-list"></ul>
+  </section>
+
+  <!-- API 8: URLSearchParams -->
+  <section class="demo-section" id="demo-url-params">
+    <h2>8. URLSearchParams <span class="badge" id="badge-url-params"></span></h2>
+    <p>Manage filter criteria as URL query parameters.</p>
+    <div class="param-row">
+      <input type="text" id="param-key" placeholder="Key" />
+      <input type="text" id="param-value" placeholder="Value" />
+      <button id="btn-param-set">Set</button>
+      <button id="btn-param-delete">Delete</button>
+      <button id="btn-param-clear">Clear All</button>
+    </div>
+    <div class="current-url" id="current-url"></div>
+    <div class="output" id="output-url-params"></div>
+  </section>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
