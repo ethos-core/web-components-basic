@@ -9,6 +9,7 @@ import { setupResizeObserver } from './demos/resize-observer';
 import { setupWebWorkers } from './demos/web-workers';
 import { setupClipboard } from './demos/clipboard';
 import { setupGeolocation } from './demos/geolocation';
+import { setupSpeech } from './demos/speech';
 
 const table = document.querySelector('data-table') as any;
 table.data = [
@@ -39,3 +40,4 @@ setupResizeObserver();
 setupWebWorkers();
 setupClipboard();
 setupGeolocation();
+setupSpeech();
