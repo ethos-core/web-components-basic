@@ -11,6 +11,7 @@ import { setupClipboard } from './demos/clipboard';
 import { setupGeolocation } from './demos/geolocation';
 import { setupSpeech } from './demos/speech';
 import { setupDragAndDrop } from './demos/drag-and-drop';
+import { setupUrlSearchParams } from './demos/url-search-params';
 
 const table = document.querySelector('data-table') as any;
 table.data = [
@@ -43,3 +44,4 @@ setupClipboard();
 setupGeolocation();
 setupSpeech();
 setupDragAndDrop();
+setupUrlSearchParams();
