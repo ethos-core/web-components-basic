@@ -8,6 +8,7 @@ import { setupScrollAnimations } from './demos/intersection-observer';
 import { setupResizeObserver } from './demos/resize-observer';
 import { setupWebWorkers } from './demos/web-workers';
 import { setupClipboard } from './demos/clipboard';
+import { setupGeolocation } from './demos/geolocation';
 
 const table = document.querySelector('data-table') as any;
 table.data = [
@@ -37,3 +38,4 @@ setupScrollAnimations();
 setupResizeObserver();
 setupWebWorkers();
 setupClipboard();
+setupGeolocation();
