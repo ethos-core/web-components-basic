@@ -10,6 +10,7 @@ import { setupWebWorkers } from './demos/web-workers';
 import { setupClipboard } from './demos/clipboard';
 import { setupGeolocation } from './demos/geolocation';
 import { setupSpeech } from './demos/speech';
+import { setupDragAndDrop } from './demos/drag-and-drop';
 
 const table = document.querySelector('data-table') as any;
 table.data = [
@@ -41,3 +42,4 @@ setupWebWorkers();
 setupClipboard();
 setupGeolocation();
 setupSpeech();
+setupDragAndDrop();
