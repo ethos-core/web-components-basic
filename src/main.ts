@@ -4,6 +4,10 @@ import './components/lazy-image';
 import './components/data-table';
 import './components/toast-notification';
 import { ToastNotification } from './components/toast-notification';
+import { setupScrollAnimations } from './demos/intersection-observer';
+import { setupResizeObserver } from './demos/resize-observer';
+import { setupWebWorkers } from './demos/web-workers';
+import { setupClipboard } from './demos/clipboard';
 
 const table = document.querySelector('data-table') as any;
 table.data = [
@@ -28,3 +32,8 @@ document.getElementById('toast-warning')!.addEventListener('click', () =>
 document.getElementById('toast-info')!.addEventListener('click', () =>
   ToastNotification.show('New update available.', { type: 'info' })
 );
+
+setupScrollAnimations();
+setupResizeObserver();
+setupWebWorkers();
+setupClipboard();
